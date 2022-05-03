@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LS: Voting App</title>
+    <meta name="description" content="Voting App">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../public/stylepolls.css">
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <h2 class="center" id="name">New Poll</h2>
+    <div id="newpoll">
+      <form action="/newpoll" method="post">
+        <label>Question: </label>
+        <input type="text" name="question" required>
+        <br>
+        <label>Options (seperated by commas): </label><br>
+        <input type="text"name="newoptions" id="newoptions"><br>
+        <input type="submit" value="Submit">
+      </form><br>
+      <a href="/mypolls">Cancel</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+        $.ajax({
+          type: 'GET',
+          url: '/api/info',
+          success: function(info) {
+            const { username } = info;
+            let logged_navbar = `
+              <header id="header">
+                <div id="welcome">Welcome, ${username}</div>
+                <nav>
+                  <ul id=logged-in>
+                    <a class="nav-link" href="/"><li>Home</li></a>
+                    <a class="nav-link" href="/mypolls"><li>My Polls</li></a>
+                    <a class="nav-link" href="/newpoll"><li>New Poll</li></a>
+                    <a class="nav-link" href="/logout"><li>Log Out</li></a>
+                  </ul>
+                </nav>
+              </header>
+            `;
+            $("#navbar").html(logged_navbar);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

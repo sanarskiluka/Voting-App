@@ -1,7 +1,55 @@
-.border {
-  border-style: inset;
-  border-width: 1px;
-  margin: 10px;
+* {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+/* For index.html */
+header {
+  position: fixed;
+  top: 0;
+  min-height: 75px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  width: 100vw;
+}
+
+nav > ul {
+  width: 25vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-right: 50px;
+}
+
+#logged-in {
+  width: 30vw;
+}
+
+#logged-out {
+  width: 25vw;
+}
+
+li {
+  list-style: none;
+  border: solid white 1.5px;
+  padding: 10px;
+}
+
+li:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#welcome {
+  color: whitesmoke;
+}
+
+a {
+  color: whitesmoke;
+  text-decoration: none;
 }
 
 .center {
@@ -10,55 +58,63 @@
   margin-right: auto;
 }
 
-div > input {
-  margin: 0.5rem;
+#name {
+  margin-top: 100px;
 }
 
-.login {
-  border: solid 2px #777;
-  width: 50%;
-  background-color: aliceblue;
+.poll {
+  padding: 20px;
+  width: 90%;
+  height: auto;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  border: solid black 2px;
+  background-color: rgb(200, 200, 200);
+  cursor: pointer;
 }
 
-a.text {
-  text-decoration: none;
-  font-weight: 700;
+#vote {
+  background-color: rgb(230, 230, 230);
+  text-align: center;
+  width: 300px;
 }
 
-form {
-  padding: 3px;
-  width: 500px;
+#voted {
+  width: 300px;
 }
 
-form input {
-  background-color: #eee;
-  border: green solid 2px;
-  padding: 10px; 
-  width: 90%; 
-  margin-right: .5%;
+.new-option {
+  width: 292px;
 }
 
-form button { 
-  width: 9%;
-  background: rgb(130, 224, 255);
-  border: none; 
-  padding: 10px; 
+#author {
+  position: absolute;
+  right: 80px;
+  font-size: 14px;
 }
 
-#messages { 
-  list-style-type: none;
-  text-align: left;
-  margin: 0;
-  padding: 0;
-  height: 20em;
-  overflow: scroll;
-  overflow-x: hidden;
+
+
+/* For sign-up.html and log-in.html */
+.sign-up, .log-in {
+  height: auto;
+  width: 90vw;
+  margin: auto;
+  background-color: rgb(200, 200, 200);
+  border: solid black 1.5px;
+  margin-top: 100px;
+  padding: 20px;
 }
 
-#messages li { 
-  padding: 5px 10px;
+p > a {
+  color: darkcyan;
+  text-decoration: underline;
 }
 
-#messages li:nth-child(odd) { 
-  background: #eee;
+/* Charts */
+.chart-place {
+  width: 30vw;
+  height: auto;
 }

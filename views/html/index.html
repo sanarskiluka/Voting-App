@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LS: Voting App</title>
+    <meta name="description" content="Voting App">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../public/style.css">
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <h1 class="center" id="name">LS Voting App</h1>
+    <div id="poll-place"></div>
+    <br><br>
+    <div id="rame">
+      <canvas id="chart"></canvas>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      $(function() {
+
+        let authenticated, username;
+
+        $.ajax({
+          type: 'GET',
+          url: '/api/info',
+          success: function(info) {
+            authenticated = info.authenticated;
+            username = info.username;
+
+            let logged_navbar = `
+              <header id="header">
+                <div id="welcome">Welcome, ${username}</div>
+                <nav>
+                  <ul id=logged-in>
+                    <a class="nav-link" href="/"><li>Home</li></a>
+                    <a class="nav-link" href="/mypolls"><li>My Polls</li></a>
+                    <a class="nav-link" href="/newpoll"><li>New Poll</li></a>
+                    <a class="nav-link" href="/logout"><li>Log Out</li></a>
+                  </ul>
+                </nav>
+              </header>
+            `;
+            let loggedout_navbar = `
+              <header id="header">
+                <div id="welcome">Welcome</div>
+                <nav>
+                  <ul id="logged-out">
+                    <a class="nav-link" href="/"><li>Home</li></a>
+                    <a class="nav-link" href="/login"><li>Log In</li></a>
+                    <a class="nav-link" href="/signup"><li>Sign Up</li></a>
+                  </ul>
+                </nav>
+              </header>
+            `;
+
+            if(authenticated) {
+              $("#navbar").html(logged_navbar);
+            } else {
+              $("#navbar").html(loggedout_navbar);
+            }
+          }
+        });
+
+        $.ajax({
+          type: 'GET',
+          url: '/api/polls',
+          success: function(polls) {
+            let render_polls = "";
+            for(let i = 0; i < polls.length; i++) {
+              let options = "";
+              let optionNames = Object.keys(polls[i].options);
+              optionNames.push("Add Option");
+              for(let j = 0; j < optionNames.length; j++) {
+                let option = `
+                  <option value="${optionNames[j]}">${optionNames[j]}</option>
+                `;
+                options += option;
+              }
+              let poll = `
+                <div class="poll" clicked="false" id="poll-${i}">
+                  <form action="/vote/${polls[i]._id}" method="POST">
+                    <div id="author">
+                      Created by: ${polls[i].author}
+                    </div>
+                    <div id="question">
+                      ${polls[i].question}
+                    </div>
+                    <div class="answer">
+                      <select name="voted" id="voted">
+                        ${options}
+                      </select>
+                      <br>
+                      <input type="text" name="new-option" class="new-option" id="new-option" placeholder="New Option">
+                    </div>
+                    <br>
+                    <button type="submit" id="vote">Vote</button>
+                  </form>
+                  <!--<div id="chart-place-${i}" class="center chart-place">
+                    <canvas id="chart-${i}"></canvas>
+                  </div>-->
+                  <div id="chart-place-${i}" class="center chart-place">
+                  </div>
+                </div>
+              `;
+              render_polls += poll;
+            }
+            $("#poll-place").html(render_polls);
+
+            $(".poll").click(function() {
+              const id = $(this)[0].attributes[2].value;
+              const numId = id.slice(id.length - 1, id.length);
+              if($(this)[0].attributes[1].value == "false") {
+                $(`#chart-place-${numId}`).html(`<canvas id="chart-${numId}"></canvas>`);
+                $(this).css('height', "auto");
+                $(this)[0].attributes[1].value = true;
+                const colors = ['red', 'blue', 'yellow', 'green', 'cyan', 'orange', 'black', 'brown', 'pink', 'grey', 'tomato', 'gold', 'bisque', 'cream', 'violet', 'blueviolet', 'chocolate', 'crimson', 'darkgreen', 'ivory', 'khaki', 'lavender', 'beige', 'goldenrod', 'lime', 'magenda', 'maroon', 'orangered', 'peru', 'purple', 'salmon', 'silver'];
+                const labels = Object.keys(polls[numId].options);
+                const data = {
+                  labels: labels,
+                  datasets: [{
+                    label: polls[numId].question,
+                    data: Object.values(polls[numId].options),
+                    backgroundColor: colors.slice(0, polls[numId].options.length)
+                  }]
+                };
+                const config = {
+                  type: 'pie',
+                  data: data,
+                  options: {
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                      title: {
+                        display: true,
+                        text: polls[numId].question
+                      }
+                    }
+                  },
+                };
+                const myChart = new Chart(
+                  document.getElementById(`chart-${numId}`),
+                  config
+                );
+              } else {
+                $(`#chart-${numId}`).remove();
+                $(this)[0].attributes[1].value = false;
+                $(this).css('height', "100px");
+              }
+            });
+
+            $('.new-option').prop('disabled', true);
+            $('select').change(function() {
+              if($(this).val() == 'Add Option') {
+                $(this).next().next().prop('disabled', false);
+              } else {
+                $(this).next().next().prop('disabled', true);
+              }
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

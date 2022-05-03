@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LS: Voting App</title>
+    <meta name="description" content="Voting App">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../public/stylepolls.css">
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <h2 class="center" id="name">My Polls</h2>
+    <div id="mypolls"></div>
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+        $.ajax({
+          type: 'GET',
+          url: '/api/info',
+          success: function(info) {
+            const { username } = info;
+            let logged_navbar = `
+              <header id="header">
+                <div id="welcome">Welcome, ${username}</div>
+                <nav>
+                  <ul id=logged-in>
+                    <a class="nav-link" href="/"><li>Home</li></a>
+                    <a class="nav-link" href="/mypolls"><li>My Polls</li></a>
+                    <a class="nav-link" href="/newpoll"><li>New Poll</li></a>
+                    <a class="nav-link" href="/logout"><li>Log Out</li></a>
+                  </ul>
+                </nav>
+              </header>
+            `;
+            $("#navbar").html(logged_navbar);
+          }
+        });
+        
+        $.ajax({
+          type: 'GET',
+          url: '/api/userpolls',
+          success: function(polls) {
+            let mypolls = "";
+            for(let i = 0; i < polls.length; i++) {
+              let options = "";
+              let optionNames = Object.keys(polls[i].options);
+              for(let j = 0; j < optionNames.length; j++) {
+                let option = `${optionNames[j]}: ${polls[i].options[optionNames[j]]}<br>`;
+                options += option;
+              }
+              let poll = `
+                <div class="poll">
+                  <div class="question">${polls[i].question}</div>
+                  <div class="queries">
+                    <a href="/delete/${polls[i]._id}/">delete</a>
+                  </div>
+                  <div class="options">
+                    ${options}
+                  </div>
+                </div><hr>
+              `;
+              mypolls += poll;
+            }
+            $("#mypolls").html(mypolls);
+          }
+        })
+      });
+    </script>
+  </body>
+</html>

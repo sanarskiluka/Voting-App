@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LS: Voting App</title>
+    <meta name="description" content="Voting App">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../public/style.css">
+  </head>
+  <body>
+    <div id="logged-out-navbar">
+      <header id="header">
+        <div id="welcome">Welcome</div>
+        <nav>
+          <ul>
+            <a class="nav-link" href="/"><li>Home</li></a>
+            <a class="nav-link" href="/login"><li>Log In</li></a>
+            <a class="nav-link" href="/signup"><li>Sign Up</li></a>
+          </ul>
+        </nav>
+      </header>
+    </div>
+    <div class="log-in">
+      <form id="log-in" action="/login" method="post">
+        <div>
+          <label>Username: </label>
+          <input type="text" name="username">
+          <br>
+        </div>
+        <div>
+          <label>Password: </label>
+          <input type="password" name="password">
+          <br>
+        </div>
+        <div>
+          <input type="submit" value="Log In">
+        </div>
+      </form>
+      <br>
+      <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+    </div>
+  </body>
+</html>
